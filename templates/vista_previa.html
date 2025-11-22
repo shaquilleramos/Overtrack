@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+  
+<form method="POST" class="w-full flex items-center m-5 flex-wrap gap-6">
+
+    <!-- Selector de usuarios -->
+    <div class="flex items-center gap-3">
+        <label class="text-sm font-medium text-heading">Usuarios</label>
+
+        <select
+            class="px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+            name="empleado">
+            <option value="">Todos</option>
+            {% for n in nombres %}
+            <option value="{{ n }}" {% if empleado_seleccionado==n %}selected{% endif %}>
+                {{ n }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Botones separados -->
+    <div class="flex items-center gap-3">
+        <button class="text-white bg-red-600 box-border border border-transparent hover:bg-bg-red-300 focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+                name="accion" value="">
+            Filtrar
+        </button>
+    </div>
+
+    <!-- Enlaces -->
+    <div class="flex items-center  gap-4">
+        <a class="text-white bg-green-500 box-border border border-transparent hover:bg-green-300 focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+           href="/descargar_extras?nombre={{ empleado_seleccionado or 'todos' }}">
+            Descargar horas extras
+        </a>
+
+        <a class="text-white bg-blue-500 box-border border border-transparent hover:bg-blue-300 focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+           href="/descargar_llegadas?nombre={{ empleado_seleccionado or 'todos' }}">
+            Descargar llegadas
+        </a>
+    </div>
+
+</form>
+
+<hr>
+
+<div class="bg-neutral-primary-soft block p-6 border rounded-lg shadow-xs">
+  <table class="w-full text-sm text-left rtl:text-right text-body border border-slate-300 rounded-lg border">
+    <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default sticky bg-white top-0 z-10">
+      <tr>
+        {% for col in tabla[0].keys() %}
+        <th class="px-6 py-3 font-medium">{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for fila in tabla %}
+
+        {% if fila["Nombre"].startswith("TOTAL HORAS EXTRAS") %}
+        <!-- =======================================================
+             🔥 FILA ESPECIAL PARA TOTAL HORAS EXTRAS
+        ======================================================== -->
+        <tr class="bg-white-100 font-bold border-b-4 border-yellow-500">
+            {% for key, value in fila.items() %}
+                {% if loop.first %}
+                    <!-- COLUMNA QUE OCUPA TODA LA FILA -->
+                    <td class="px-6 py-3 text-lg" colspan="7">
+                        {{ value }}
+                    </td>
+                {% else %}
+                    {% if key == "Horas extras" %}
+                    <td class="px-6 py-3 text-lg text-right">
+                        {{ value }}
+                    </td>
+                    {% else %}
+                    <td class="px-6 py-3"></td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </tr>
+
+        {% else %}
+        <!-- =======================================================
+             ✔ FILA NORMAL
+        ======================================================== -->
+        <tr>
+          {% for v in fila.values() %}
+          <td class="px-6 py-3 font-medium">{{ v }}</td>
+          {% endfor %}
+        </tr>
+
+        {% endif %}
+
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+
+<br>
+
+{% endblock %}
