@@ -5,12 +5,21 @@ import os
 import io
 from openpyxl.styles import PatternFill, Alignment, Font
 from openpyxl.worksheet.table import Table, TableStyleInfo
+from flask_mysqldb import MySQL
 
 from utils.procesamiento import procesar_registros, HORARIOS_SEDES
+
+
 
 app = Flask(__name__)
 app.secret_key = "clave-ultra-secreta"
 
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'Overtrack'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+mysql = MySQL(app)
 # Memoria global (sin parquet)
 MEMORY = {}
 
@@ -22,9 +31,39 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def index():
     return render_template("index.html", sedes=list(HORARIOS_SEDES.keys()))
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    # Manejo de login
+    if request.method=="POST" and "email" in request.form and "password" in request.form:
+        # Obtener datos del formulario
+        email=request.form["email"]
+        password=request.form["password"]
+        # Verificar en la base de datos
+        cursor=mysql.connection.cursor()    
+        cursor.execute("SELECT * FROM usuarios WHERE email=%s AND password=%s",(email,password))
+        # Obtener un solo registro
+        user=cursor.fetchone()
+        # Si el usuario existe
+        if user:
+            session["loggedin"]=True
+            session["id"]=user["id"]
+            session["name"]=user["name"]
+            return redirect(url_for("index"))
+        else:
+            return render_template("login.html",mensaje_error="Correo o contraseña incorrecta",sedes=list(HORARIOS_SEDES.keys()))
+    return render_template("login.html", sedes=list(HORARIOS_SEDES.keys()))
+
+@app.route("/registro")
+def registro():
+    return render_template("singup.html", sedes=list(HORARIOS_SEDES.keys()))
+
 @app.route("/horarios")
 def horaios():
     return render_template("horarios.html", sedes=list(HORARIOS_SEDES.keys()))
+
+@app.route("/ajustes")
+def ajustes():
+    return render_template("ajustes.html", sedes=list(HORARIOS_SEDES.keys()))
 
 @app.route("/subir", methods=["POST"])
 def subir():
@@ -365,4 +404,5 @@ def descargar_llegadas():
 
 
 if __name__ == "__main__":
+    app.secret_key="Lian2305"
     app.run(debug=True)

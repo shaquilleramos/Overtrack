@@ -1,51 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="max-w-lg mx-auto bg-white p-6 my-5 rounded shadow">
-        <h1 class="text-xl font-bold mb-4">Cargar archivo del huellero</h1>
+<div class="max-w-lg mx-auto bg-white p-6 my-5 rounded shadow">
+    <h1 class="text-xl font-bold mb-4">Cargar archivo del huellero</h1>
 
-        <!-- FORMULARIO: fijate method y enctype -->
-        <form id="form-subir" action="{{ url_for('subir') }}" method="POST" enctype="multipart/form-data"
-            class="space-y-4">
-            <select name="sede" class="w-full border rounded p-2">
-                <option value="">Seleccionar sede…</option>
-                <option value="cartagena">Cartagena</option>
-                <option value="medellin">Medellín</option>
-                <option value="barranquilla">Barranquilla</option>
-            </select>
+    <!-- FORMULARIO: fijate method y enctype -->
+    <form id="form-subir" action="{{ url_for('subir') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <select name="sede" class="w-full border rounded p-2">
+            <option value="">Seleccionar sede…</option>
+            <option value="cartagena">Cartagena</option>
+            <option value="medellin">Medellín</option>
+            <option value="barranquilla">Barranquilla</option>
+        </select>
 
-            <input type="file" name="archivo_csv" id="archivo_csv" accept=".csv,.xls,.xlsx" required
-                class="block w-full border rounded p-2" />
+        <input type="file" name="archivo_csv" id="archivo_csv" accept=".csv,.xls,.xlsx" required
+            class="block w-full border rounded p-2" />
 
-            <div class="flex gap-2">
+        <div class="flex gap-2">
 
-                <button
-                    class="px-4 py-2 rounded-md border border-green-300 bg-green-500 text-white text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
-                    Subir
-                </button>
-                <button id="btn-reset" type="button" onclick="document.getElementById('archivo_csv').value=''"
-                    class="px-3 py-2 border rounded">
-                    Limpiar
-                </button>
-            </div>
-
-            <div id="status" class="text-sm text-gray-600 mt-2" style="display: none">
-                Subiendo…
-            </div>
-        </form>
-
-        <div class="mt-4 text-sm text-red-600">
-            {% if mensaje_error %} {{ mensaje_error }} {% endif %}
+            <button
+                class="px-4 py-2 rounded-md border border-green-300 bg-green-500 text-white text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
+                Subir
+            </button>
+            <button id="btn-reset" type="button" onclick="document.getElementById('archivo_csv').value=''"
+                class="px-3 py-2 border rounded">
+                Limpiar
+            </button>
         </div>
-    </div>
 
-    <script>
-        // Pequeña UX: indica que se está enviando y evita doble submit
-        const form = document.getElementById("form-subir");
-        const btn = document.getElementById("btn-subir");
-        const status = document.getElementById("status");
-        form.addEventListener("submit", (e) => {
-            btn.disabled = true;
-            status.style.display = "block";
-        });
-    </script>
+        <div id="status" class="text-sm text-gray-600 mt-2" style="display: none">
+            Subiendo…
+        </div>
+    </form>
+
+    <div class="mt-4 text-sm text-red-600">
+        {% if mensaje_error %} {{ mensaje_error }} {% endif %}
+    </div>
+</div>
+
+<script>
+    // Pequeña UX: indica que se está enviando y evita doble submit
+    const form = document.getElementById("form-subir");
+    const btn = document.getElementById("btn-subir");
+    const status = document.getElementById("status");
+    form.addEventListener("submit", (e) => {
+        btn.disabled = true;
+        status.style.display = "block";
+    });
+</script>
 {% endblock %}

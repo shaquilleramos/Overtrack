@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="stylesheet" href="/static/Img/css/all.min.css">
     <title>{{ title if title else "Overtrack" }}</title>
 </head>
+
 <body>
     <nav class="relative bg-gray-800">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -35,13 +37,12 @@
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
-                            
+
                             <a href="/"
                                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Inicio</a>
                             <a href="/horarios"
                                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Horarios</a>
-                            <!-- <a href="#"
-                                class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</a> -->
+
                         </div>
                     </div>
                 </div>
@@ -59,9 +60,15 @@
                     </button>
 
                     <!-- Profile dropdown -->
-                    <el-dropdown class="relative ml-3">
-                        <p class="text-white">Hola, Bienvenido!!</p>
-                    </el-dropdown>
+                    <div class="relative ml-3">
+                        <a href="/ajustes"
+                            class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"><i
+                                class="fa-solid fa-gear"></i></a>
+                        <a href="/login"
+                            class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"><i
+                                class="fa-solid fa-arrow-right-from-bracket text-gray-400  hover:text-white"></i></a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -83,4 +90,5 @@
         {% block content %}{% endblock %}
     </main>
 </body>
+
 </html>
